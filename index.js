@@ -12,8 +12,7 @@ if (inDevMode) {
     var recaptcha = new Recaptcha(process.env.SITEKEY, process.env.SECRETKEY, { callback: 'cb' });
 }
 
-let info = require('./infos.json');
-let runningAuths = info["runningAuths"];
+let runningAuths = {}
 const { writeFile } = require('fs');
 
 function uselessErrorHandler(error) {
@@ -52,8 +51,6 @@ app.post("/login/auth", recaptcha.middleware.verify, (req, res) => {
             if (runningAuths[authId]["isVerified"] === false) {
                 console.log(runningAuths[authId])
                 runningAuths[authId]["isVerified"] = true
-                info["runningAuths"] = runningAuths
-                writeFile("./infos.json", JSON.stringify(info), uselessErrorHandler)
             }
         }
 
@@ -66,10 +63,6 @@ app.get("/secret-dont-browse/1888/rbx-api/create-verify", (req, res) => {
         runningAuths[req.query.authid] = {
             "isVerified": false
         }
-
-        info["runningAuths"] = runningAuths
-
-        writeFile("./infos.json", JSON.stringify(info), uselessErrorHandler)
         console.log(info)
         res.send(req.query.authid)
     } else {
@@ -88,9 +81,6 @@ app.get("/secret-dont-browse/1888/rbx-api/isverified", (req, res) => {
             if (runningAuths[authId]["isVerified"] === true) {
                 res.send("yes")
                 runningAuths[authId] = undefined
-                info["runningAuths"] = runningAuths
-
-                writeFile("./infos.json", JSON.stringify(info), uselessErrorHandler)
             }
         }
     }

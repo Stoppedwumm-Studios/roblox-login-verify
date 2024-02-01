@@ -9,7 +9,7 @@ if (inDevMode) {
     const secrets = require("./secrets.json");
     var recaptcha = new Recaptcha(secrets["sitekey"], secrets["secret"], { callback: 'cb' });
 } else {
-    var recaptcha = new Recaptcha(process.env.sitekey, process.env.secretkey, { callback: 'cb' });
+    var recaptcha = new Recaptcha(process.env.SITEKEY, process.env.SECRETKEY, { callback: 'cb' });
 }
 
 let info = require('./infos.json');

@@ -25,12 +25,12 @@ function uselessErrorHandler(error) {
 
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/login/auth", (req, res) => {
+app.get("/verify", (req, res) => {
     const authId = req.query.authid;
 
     // Render the login/auth form with reCAPTCHA
     res.send(`
-        <form action="/login/auth?authid=${authId}" method="post">
+        <form action="/verify?authid=${authId}" method="post">
             <!-- Your other form fields go here -->
             ${recaptcha.render()}
             <button type="submit">Submit</button>
@@ -38,7 +38,7 @@ app.get("/login/auth", (req, res) => {
     `);
 });
 
-app.post("/login/auth", recaptcha.middleware.verify, (req, res) => {
+app.post("/verify", recaptcha.middleware.verify, (req, res) => {
     if (req.recaptcha.error) {
         // reCAPTCHA verification failed
         res.send("reCAPTCHA verification failed");
@@ -58,7 +58,7 @@ app.post("/login/auth", recaptcha.middleware.verify, (req, res) => {
     }
 });
 
-app.get("/secret-dont-browse/1888/rbx-api/create-verify", (req, res) => {
+app.get("/rbx-api/create-verify", (req, res) => {
     if (runningAuths[req.query.authid] === undefined) {
         runningAuths[req.query.authid] = {
             "isVerified": false
@@ -70,7 +70,7 @@ app.get("/secret-dont-browse/1888/rbx-api/create-verify", (req, res) => {
     }
 })
 
-app.get("/secret-dont-browse/1888/rbx-api/isverified", (req, res) => {
+app.get("/rbx-api/isverified", (req, res) => {
     const authId = req.query.authid
     if (runningAuths[authId] === undefined) {
         res.send("404")

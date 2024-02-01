@@ -84,6 +84,10 @@ app.get("/rbx-api/isverified", (req, res) => {
     }
 })
 
+app.get("/", (req, res) => {
+    res.redirect("http://rbxverify.rf.gd")
+})
+
 app.listen(8000, () => {
     console.log("Server is running on port 8000");
 });

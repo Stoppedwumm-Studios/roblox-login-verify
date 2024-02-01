@@ -63,7 +63,6 @@ app.get("/rbx-api/create-verify", (req, res) => {
         runningAuths[req.query.authid] = {
             "isVerified": false
         }
-        console.log(info)
         res.send(req.query.authid)
     } else {
         res.send("already_taken")

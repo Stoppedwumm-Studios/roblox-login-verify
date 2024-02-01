@@ -54,7 +54,7 @@ app.post("/verify", recaptcha.middleware.verify, (req, res) => {
             }
         }
 
-        res.send("Verification successful");
+        res.send("Verification successful, please return to Roblox");
     }
 });
 

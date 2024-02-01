@@ -3,7 +3,9 @@ const Recaptcha = require('express-recaptcha').RecaptchaV2;
 
 const app = express();
 
-if (process.env.sitekey === undefined) {
+const inDevMode = false
+
+if (inDevMode) {
     const secrets = require("./secrets.json");
     var recaptcha = new Recaptcha(secrets["sitekey"], secrets["secret"], { callback: 'cb' });
 } else {

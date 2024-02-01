@@ -79,7 +79,6 @@ app.get("/rbx-api/isverified", (req, res) => {
         } else {
             if (runningAuths[authId]["isVerified"] === true) {
                 res.send("yes")
-                runningAuths[authId] = undefined
             }
         }
     }

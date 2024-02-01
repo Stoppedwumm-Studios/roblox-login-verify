@@ -1,0 +1,26 @@
+{
+  "name": "roblox-login-verify",
+  "version": "1.0.0",
+  "description": "A roblox verify app",
+  "main": "index.js",
+  "scripts": {
+    "test": "node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Stoppedwumm-Studios/roblox-login-verify.git"
+  },
+  "keywords": [
+    "roblox",
+    "discord"
+  ],
+  "author": "Stoppedwumm",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Stoppedwumm-Studios/roblox-login-verify/issues"
+  },
+  "homepage": "https://github.com/Stoppedwumm-Studios/roblox-login-verify#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

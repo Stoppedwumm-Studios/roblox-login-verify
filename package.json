@@ -21,6 +21,8 @@
   },
   "homepage": "https://github.com/Stoppedwumm-Studios/roblox-login-verify#readme",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "express-recaptcha": "^5.1.0",
+    "jade": "^0.29.0"
   }
 }

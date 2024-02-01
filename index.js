@@ -1,28 +1,82 @@
-const express = require("express")
-const app = express()
-let runningAuths = []
+const express = require("express");
+const Recaptcha = require('express-recaptcha').RecaptchaV2;
 
+const app = express();
+
+if (process.env.sitekey === undefined) {
+    const secrets = require("./secrets.json");
+    var recaptcha = new Recaptcha(secrets["sitekey"], secrets["secret"], { callback: 'cb' });
+} else {
+    var recaptcha = new Recaptcha(process.env.sitekey, process.env.secretkey, { callback: 'cb' });
+}
+
+let info = require('./infos.json');
+let runningAuths = info["runningAuths"];
+const { writeFile } = require('fs');
+
+function uselessErrorHandler(error) {
+    if (error) {
+        console.log('An error has occurred ', error);
+        return;
+    }
+    console.log("Error handler called without error");
+}
+
+app.use(express.urlencoded({ extended: true }));
 
 app.get("/login/auth", (req, res) => {
-    const authId = req.query.download
+    const authId = req.query.authid;
 
-    
-    console.log("New authId : " + authId)
-})
+    // Render the login/auth form with reCAPTCHA
+    res.send(`
+        <form action="/login/auth?authid=${authId}" method="post">
+            <!-- Your other form fields go here -->
+            ${recaptcha.render()}
+            <button type="submit">Submit</button>
+        </form>
+    `);
+});
+
+app.post("/login/auth", recaptcha.middleware.verify, (req, res) => {
+    if (req.recaptcha.error) {
+        // reCAPTCHA verification failed
+        res.send("reCAPTCHA verification failed");
+    } else {
+        const authId = req.query.authid;
+
+        console.log(authId)
+        // Your logic after reCAPTCHA verification goes here
+        if (runningAuths[authId]) {
+            if (runningAuths[authId]["isVerified"] === false) {
+                console.log(runningAuths[authId])
+                runningAuths[authId]["isVerified"] = true
+                info["runningAuths"] = runningAuths
+                writeFile("./infos.json", JSON.stringify(info), uselessErrorHandler)
+            }
+        }
+
+        res.send("Verification successful");
+    }
+});
 
 app.get("/secret-dont-browse/1888/rbx-api", (req, res) => {
-    if (runningAuths.includes(req.query.authid) === false) {
-        runningAuths.push(req.query.authid)
-        res.send("negative")
-        console.log(runningAuths)
+    if (runningAuths[req.query.authid] === undefined) {
+        runningAuths[req.query.authid] = {
+            "isVerified": false
+        }
+
+        info["runningAuths"] = runningAuths
+
+        writeFile("./infos.json", JSON.stringify(info), uselessErrorHandler)
+        console.log(info)
+        res.send(req.query.authid)
     } else {
-        console.log("Return running auth")
+        res.send("already_taken")
     }
-    
 })
 
 app.listen(8000, () => {
-    console.log("We are online")
-})
+    console.log("Server is running on port 8000");
+});
 
 module.exports = app;

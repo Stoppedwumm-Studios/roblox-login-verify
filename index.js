@@ -61,7 +61,7 @@ app.post("/login/auth", recaptcha.middleware.verify, (req, res) => {
     }
 });
 
-app.get("/secret-dont-browse/1888/rbx-api", (req, res) => {
+app.get("/secret-dont-browse/1888/rbx-api/create-verify", (req, res) => {
     if (runningAuths[req.query.authid] === undefined) {
         runningAuths[req.query.authid] = {
             "isVerified": false
@@ -74,6 +74,25 @@ app.get("/secret-dont-browse/1888/rbx-api", (req, res) => {
         res.send(req.query.authid)
     } else {
         res.send("already_taken")
+    }
+})
+
+app.get("/secret-dont-browse/1888/rbx-api/isverified", (req, res) => {
+    const authId = req.query.authid
+    if (runningAuths[authId] === undefined) {
+        res.send("404")
+    } else {
+        if (runningAuths[authId]["isVerified"] === false) {
+            res.send("no")
+        } else {
+            if (runningAuths[authId]["isVerified"] === true) {
+                res.send("yes")
+                runningAuths[authId] = undefined
+                info["runningAuths"] = runningAuths
+
+                writeFile("./infos.json", JSON.stringify(info), uselessErrorHandler)
+            }
+        }
     }
 })
 

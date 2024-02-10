@@ -85,7 +85,7 @@ app.get("/rbx-api/isverified", (req, res) => {
 })
 
 app.get("/", (req, res) => {
-    res.redirect("http://rbxverify.rf.gd")
+    res.sendFile(__dirname + "/home.html")
 })
 
 app.listen(8000, () => {
